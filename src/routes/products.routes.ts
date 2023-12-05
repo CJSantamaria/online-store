@@ -1,17 +1,17 @@
 import { Request, Response, Router } from "express";
-import { productsController } from "../controllers/products.controller";
+import { productsController as pc } from "../controllers/products.controller";
 
-class ProductRoutes{
-    public router: Router
-    constructor(){
-        this.router = Router()
-        this.routes()
-    }
-    routes(){
-        this.router.get('/', productsController.getProducts)
-        this.router.get('/:id', productsController.getProduct)
-    }
+class ProductRoutes {
+  public router: Router;
+  constructor() {
+    this.router = Router();
+    this.routes();
+  }
+  routes() {
+    this.router.get("/", pc.getProducts);
+    this.router.get("/:id", pc.getProduct);
+  }
 }
-const productsRoutes = new ProductRoutes()
+const productsRoutes = new ProductRoutes();
 
-export default productsRoutes.router
+export default productsRoutes.router;
