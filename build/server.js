@@ -14,16 +14,16 @@ class Server {
         this.routes();
     }
     config() {
-        this.app.set('port', process.env.PORT || 8080);
-        this.app.use((0, morgan_1.default)('dev'));
+        this.app.set("port", process.env.PORT || 8080);
+        this.app.use((0, morgan_1.default)("dev"));
     }
     routes() {
-        this.app.use('/api/products', products_routes_1.default);
-        this.app.use('/api', carts_routes_1.default);
+        this.app.use("/api/products", products_routes_1.default);
+        this.app.use("/api", carts_routes_1.default);
     }
     start() {
-        this.app.listen(this.app.get('port'), () => {
-            console.log(`Server listening on port ${this.app.get('port')}..`);
+        this.app.listen(this.app.get("port"), () => {
+            console.log(`Server listening on port ${this.app.get("port")}..`);
         });
     }
 }
