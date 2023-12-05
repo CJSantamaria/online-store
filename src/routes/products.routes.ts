@@ -1,4 +1,5 @@
-import { request, response, Router } from "express";
+import { Request, Response, Router } from "express";
+import getProducts from "../controllers/products.controller";
 
 class ProductRoutes{
     public router: Router
@@ -7,11 +8,13 @@ class ProductRoutes{
         this.routes()
     }
     routes(){
-        this.router.get('/products', (req, res,)=>{
+        this.router.get('/product', (req, res,)=>{
             res.send('<H1>WELCOME FROM ROUTES / PRODUCTS</H1>')
         })
+        this.router.get('/products', getProducts)
     }
+    // this.router.get('/products', ProductsController.getProducts())
 }
-const productRoutes = new ProductRoutes()
+const productsRoutes = new ProductRoutes()
 
-export default productRoutes.router
+export default productsRoutes.router

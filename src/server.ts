@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import productRoutes from "./routes/products.routes";
+import productsRoutes from "./routes/products.routes";
 import cartsRoutes from "./routes/carts.routes";
 
 class Server{
@@ -16,7 +16,7 @@ class Server{
         this.app.use(morgan('dev'))
     }
     routes(){
-        this.app.use('/api',productRoutes)
+        this.app.use('/api',productsRoutes)
         this.app.use('/api',cartsRoutes)
     }
     start(){
