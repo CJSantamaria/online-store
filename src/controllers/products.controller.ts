@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-class ProductsController{
+export class ProductsController{
     public constructor(){
     }
     public getProducts(req: Request, res: Response): void{
@@ -12,5 +12,5 @@ class ProductsController{
 }
 
 const productsController = new ProductsController()
-export default productsController.getProduct
+export { productsController }
 

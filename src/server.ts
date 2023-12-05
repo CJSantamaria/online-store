@@ -16,7 +16,7 @@ class Server{
         this.app.use(morgan('dev'))
     }
     routes(){
-        this.app.use('/api',productsRoutes)
+        this.app.use('/api/products',productsRoutes)
         this.app.use('/api',cartsRoutes)
     }
     start(){

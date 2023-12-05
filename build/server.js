@@ -18,7 +18,7 @@ class Server {
         this.app.use((0, morgan_1.default)('dev'));
     }
     routes() {
-        this.app.use('/api', products_routes_1.default);
+        this.app.use('/api/products', products_routes_1.default);
         this.app.use('/api', carts_routes_1.default);
     }
     start() {
