@@ -1,0 +1,26 @@
+{
+  "name": "online-store",
+  "version": "1.0.0",
+  "description": "a utility to manage products and shoping carts in an oline store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CJSantamaria/online-store.git"
+  },
+  "keywords": [
+    "typescript",
+    "node",
+    "express",
+    "API",
+    "rest"
+  ],
+  "author": "Carlos Santamaria",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/CJSantamaria/online-store/issues"
+  },
+  "homepage": "https://github.com/CJSantamaria/online-store#readme"
+}
