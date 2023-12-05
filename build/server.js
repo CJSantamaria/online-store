@@ -9,12 +9,16 @@ class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.config();
+        this.routes();
     }
     config() {
-        this.app.set('port', process.env.PORT || 3000);
+        this.app.set('port', process.env.PORT || 8080);
         this.app.use((0, morgan_1.default)('dev'));
     }
     routes() {
+        this.app.get('/', (rec, res) => {
+            res.send('<h1>WELCOME!!!</h1>');
+        });
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

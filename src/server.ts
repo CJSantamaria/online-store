@@ -6,14 +6,17 @@ class Server{
     constructor(){
         this.app = express()
         this.config()
+        this.routes()
     }
     
     config(){
-        this.app.set('port', process.env.PORT || 3000)
+        this.app.set('port', process.env.PORT || 8080)
         this.app.use(morgan('dev'))
     }
     routes(){
-
+        this.app.get('/', (rec,res)=>{
+            res.send('<h1>WELCOME!!!</h1>')
+        })
     }
     start(){
         this.app.listen(this.app.get('port'), ()=>{
