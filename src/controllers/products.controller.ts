@@ -14,8 +14,11 @@ export class ProductsController {
       }
     });
   }
-  public getProduct(req: Request, res: Response): void {
+  public async getProduct(req: Request, res: Response): Promise<void> {
     res.send("<h1>Hello from get singular product in the controller</h1>");
+  }
+  public async postProducts(req: Request, res: Response): Promise<void> {
+    
   }
 }
 
