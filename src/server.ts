@@ -1,5 +1,7 @@
 import express from "express";
 import morgan from "morgan";
+import productRoutes from "./routes/products.routes";
+import cartsRoutes from "./routes/carts.routes";
 
 class Server{
     public app: express.Application
@@ -14,9 +16,8 @@ class Server{
         this.app.use(morgan('dev'))
     }
     routes(){
-        this.app.get('/', (rec,res)=>{
-            res.send('<h1>WELCOME!!!</h1>')
-        })
+        this.app.use('/api',productRoutes)
+        this.app.use('/api',cartsRoutes)
     }
     start(){
         this.app.listen(this.app.get('port'), ()=>{
