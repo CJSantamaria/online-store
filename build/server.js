@@ -15,6 +15,7 @@ class Server {
     }
     config() {
         this.app.set("port", process.env.PORT || 8080);
+        this.app.use(express_1.default.json());
         this.app.use((0, morgan_1.default)("dev"));
     }
     routes() {
