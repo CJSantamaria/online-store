@@ -12,7 +12,8 @@ class Server {
   }
 
   config() {
-    this.app.set("port", process.env.PORT || 8080);
+      this.app.set("port", process.env.PORT || 8080);
+      this.app.use(express.json())
     this.app.use(morgan("dev"));
   }
   routes() {
