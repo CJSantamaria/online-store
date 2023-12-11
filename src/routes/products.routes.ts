@@ -10,6 +10,7 @@ class ProductRoutes {
   routes() {
     this.router.get("/", pc.getProducts);
     this.router.get("/:id", pc.getProduct);
+    this.router.post("/", pc.createProduct)
   }
 }
 const productsRoutes = new ProductRoutes();
