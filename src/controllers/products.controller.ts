@@ -11,10 +11,8 @@ export class ProductsController {
   public getProducts(req: Request, res: Response): Response {
     try {
       const products : Product[] = dataFile.readProducts();
-      res.send(products);
-      return res.status(200)
+      return res.status(200).send(products);
     } catch (error) {
-      console.log(error);
       return res.json({ msg: "An error has ocurred" });
     }
   }
@@ -63,8 +61,11 @@ export class ProductsController {
       thumbnails,
     };
     const products = dataFile.readProducts();
+    console.log('Products array before adding new one ', products)
+    console.log('Product to add', product)
     products.push(product);
-    console.log(products);
+    console.log('Products array after adding new one', products)
+    dataFile.saveProducts(products)
 
     res.json({ msg: "Product successfully created" });
   }
