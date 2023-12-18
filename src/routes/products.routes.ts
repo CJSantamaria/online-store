@@ -9,8 +9,9 @@ class ProductRoutes {
   }
   routes() {
     this.router.get("/", pc.getProducts);
-    this.router.get("/:id", pc.getProduct);
-    this.router.post("/", pc.createProduct)
+    this.router.get("/:pid", pc.getProduct);
+    this.router.post("/", pc.createProduct);
+    this.router.put("/:pid", pc.updateProduct);
   }
 }
 const productsRoutes = new ProductRoutes();
