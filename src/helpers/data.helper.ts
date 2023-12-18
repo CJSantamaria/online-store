@@ -4,8 +4,6 @@ import Cart from "../types/cart";
 import { dataPath } from "../config/config";
 
 class DataFile {
-  // private products: Product[] = [];
-  // private carts: Cart[] = [];
 
   public async readProductsFile(): Promise<Product[]> {
     try {
