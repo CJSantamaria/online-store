@@ -45,7 +45,7 @@ node_modules/
 jspm_packages/
 
 # Serialization files
-database/
+database/*.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
