@@ -8,26 +8,25 @@ export class ProductsController {
 
   // get the whole list of products
 
-  public getProducts(req: Request, res: Response): Response {
+  public async getProducts(req: Request, res: Response): Promise<Response> {
     try {
-      const products : Product[] = dataFile.readProducts();
+      const products: Product[] = await dataFile.readProductsFile();
       return res.status(200).send(products);
     } catch (error) {
       return res.json({ msg: "An error has ocurred" });
     }
   }
 
-  // get a single product by using its ID
+  //get a single product by using its ID
 
-  public getProduct(req: Request, res: Response): Response {
+  public async getProduct(req: Request, res: Response): Promise<Response> {
     try {
-      const products : Product[] = dataFile.readProducts();
-      const productId = req.params.id
-      const product = products.find(p => p.id ===productId)
-      if (product){
+      const products: Product[] = await dataFile.readProductsFile();
+      const product = products.find((p) => p.id === req.params.id);
+      if (product) {
         return res.status(200).send(product);
       } else {
-        return res.status(404).json({msg:"No product matches that ID"})
+        return res.status(404).json({ msg: "No product matches that ID" });
       }
     } catch (error) {
       console.log(error);
@@ -60,13 +59,9 @@ export class ProductsController {
       category,
       thumbnails,
     };
-    const products = dataFile.readProducts();
-    console.log('Products array before adding new one ', products)
-    console.log('Product to add', product)
+    const products = await dataFile.readProductsFile();
     products.push(product);
-    console.log('Products array after adding new one', products)
-    dataFile.saveProducts(products)
-
+    dataFile.writeProductsFile(products);
     res.json({ msg: "Product successfully created" });
   }
 }
