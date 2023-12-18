@@ -8,5 +8,45 @@
     "status": true,
     "category": "sports",
     "thumbnails": []
+  },
+  {
+    "id": "2799e73e-0aee-4f94-9bf7-18b3631bbdbb",
+    "title": "Talking doll",
+    "description": "gorgeous doll",
+    "code": "u516",
+    "price": 50,
+    "status": true,
+    "category": "toys",
+    "thumbnails": []
+  },
+  {
+    "id": "9b066e8b-e4af-4ea0-b24f-070fa6b97ff2",
+    "title": "Mountain bike",
+    "description": "Outstanding bike",
+    "code": "u512",
+    "price": 150,
+    "status": true,
+    "category": "toys",
+    "thumbnails": []
+  },
+  {
+    "id": "c3a5b183-c5e1-4c6f-b2dc-ce45785093d8",
+    "title": "Skateboard",
+    "description": "Astonishing Skateboard",
+    "code": "u510",
+    "price": 99,
+    "status": true,
+    "category": "toys",
+    "thumbnails": []
+  },
+  {
+    "id": "04840b6e-0833-488a-8f4d-cb99c6751d44",
+    "title": "Soccer Ball",
+    "description": "Professional soccer ball",
+    "code": "u518",
+    "price": 79,
+    "status": true,
+    "category": "toys",
+    "thumbnails": []
   }
 ]
