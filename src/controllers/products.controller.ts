@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import Product from "../types/product";
 import { dataFile } from "../helpers/data.helper";
+import { CLIENT_RENEG_LIMIT } from "tls";
 
 export class ProductsController {
   public constructor() {}
@@ -9,8 +10,13 @@ export class ProductsController {
   // get the whole list of products
 
   public async getProducts(req: Request, res: Response): Promise<Response> {
+    const page: number = req.body.page ? <number><unknown>req.body.page : 1;
+    const limit: number = req.body.limit ? <number><unknown>req.body.limit : 2;
+    const startIndex: number = (page - 1) * limit;
+    const endIndex: number = page * limit;
     try {
-      const products: Product[] = await dataFile.readProductsFile();
+      const allProducts: Product[] = await dataFile.readProductsFile();
+      const products = allProducts.slice(startIndex, endIndex);
       return res.status(200).send(products);
     } catch (error) {
       return res.json({ msg: "An error has ocurred" });
