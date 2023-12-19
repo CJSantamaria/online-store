@@ -46,12 +46,12 @@ class ProductsController {
 
   public async createProduct(req: Request, res: Response): Promise<void> {
     const id = uuidv4();
+    const status = true;
     const {
       title,
       description,
       code,
       price,
-      status,
       stock,
       category,
       thumbnails,
