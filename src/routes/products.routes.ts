@@ -12,6 +12,7 @@ class ProductRoutes {
     this.router.get("/:pid", pc.getProduct);
     this.router.post("/", pc.createProduct);
     this.router.put("/:pid", pc.updateProduct);
+    this.router.delete("/:pid", pc.deleteProduct);
   }
 }
 const productsRoutes = new ProductRoutes();
