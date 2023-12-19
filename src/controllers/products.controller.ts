@@ -76,6 +76,9 @@ class ProductsController {
   // update a product
 
   public async updateProduct(req: Request, res: Response): Promise<Response> {
+    if (!req.params.pid)
+      return res.status(400).json({ msg: "Bad request: missing product ID" });
+
     const products = await dataFile.readProductsFile();
     const index = products.findIndex((p) => p.id === req.params.pid);
     if (index < 0) {
@@ -103,7 +106,7 @@ class ProductsController {
     const product = products.find((p) => p.id === req.params.pid);
     if (product) {
       const newProducts = products.filter((p) => p.id != req.params.pid);
-      await dataFile.writeProductsFile(newProducts)
+      await dataFile.writeProductsFile(newProducts);
       return res.status(200).json({ msg: "Product successfully deleted" });
     } else {
       return res.status(404).json({ msg: "No product matches that ID" });
