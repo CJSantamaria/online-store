@@ -10,26 +10,6 @@
     "thumbnails": []
   },
   {
-    "id": "2799e73e-0aee-4f94-9bf7-18b3631bbdbb",
-    "title": "Talking Doll",
-    "description": "Gorgeous talking doll",
-    "code": "u516",
-    "price": 56,
-    "status": true,
-    "category": "toys",
-    "thumbnails": []
-  },
-  {
-    "id": "9b066e8b-e4af-4ea0-b24f-070fa6b97ff2",
-    "title": "Mountain bike",
-    "description": "Outstanding bike",
-    "code": "u512",
-    "price": 150,
-    "status": true,
-    "category": "toys",
-    "thumbnails": []
-  },
-  {
     "id": "c3a5b183-c5e1-4c6f-b2dc-ce45785093d8",
     "title": "Skateboard",
     "description": "Astonishing Skateboard",
@@ -45,6 +25,26 @@
     "description": "Professional soccer ball",
     "code": "u518",
     "price": 79,
+    "status": true,
+    "category": "toys",
+    "thumbnails": []
+  },
+  {
+    "id": "ba4134d3-9695-4265-9a18-ac266a751466",
+    "title": "Baseball bat",
+    "description": "Awesome baseball bat for childs",
+    "code": "U515",
+    "price": 199,
+    "status": true,
+    "category": "sports",
+    "thumbnails": []
+  },
+  {
+    "id": "8e1cc7aa-4e98-46ed-9aa1-e0b67ef4d721",
+    "title": "Talking Doll",
+    "description": "Gorgeous talking doll",
+    "code": "u516",
+    "price": 56,
     "status": true,
     "category": "toys",
     "thumbnails": []
