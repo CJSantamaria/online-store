@@ -11,6 +11,7 @@ class ProductRoutes {
     this.router.get("/", pc.getProducts);
     this.router.get("/:pid", pc.getProduct);
     this.router.post("/", pc.createProduct);
+    this.router.put("/", pc.updateProduct);
     this.router.put("/:pid", pc.updateProduct);
     this.router.delete("/:pid", pc.deleteProduct);
   }
