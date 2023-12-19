@@ -3,16 +3,16 @@ import { v4 as uuidv4 } from "uuid";
 import Product from "../types/product";
 import { dataFile } from "../helpers/data.helper";
 
-export class ProductsController {
+class ProductsController {
   public constructor() {}
 
   // get a specific page of the list of products
 
   public async getProducts(req: Request, res: Response): Promise<Response> {
-    const page: number = req.body.page ? <number>(<unknown>req.body.page) : 1;
-    const limit: number = req.body.limit
-      ? <number>(<unknown>req.body.limit)
-      : 2;
+    const page: number = req.query.page ? <number>(<unknown>req.query.page) : 1;
+    const limit: number = req.query.limit
+      ? <number>(<unknown>req.query.limit)
+      : 5;
     const startIndex: number = (page - 1) * limit;
     const endIndex: number = page * limit;
 
@@ -78,11 +78,9 @@ export class ProductsController {
   public async updateProduct(req: Request, res: Response): Promise<Response> {
     const products = await dataFile.readProductsFile();
     const index = products.findIndex((p) => p.id === req.params.pid);
-    console.log("index:", index)
     if (index < 0) {
       return res.status(404).json({ msg: "No product matches that ID" });
     } else {
-
       if (req.body.title) products[index].title = req.body.title;
       if (req.body.description)
         products[index].description = req.body.description;
@@ -95,6 +93,20 @@ export class ProductsController {
 
       dataFile.writeProductsFile(products);
       return res.status(200).json({ msg: "Product successfully updated" });
+    }
+  }
+
+  // delete a product
+
+  public async deleteProduct(req: Request, res: Response): Promise<Response> {
+    const products = await dataFile.readProductsFile();
+    const product = products.find((p) => p.id === req.params.pid);
+    if (product) {
+      const newProducts = products.filter((p) => p.id != req.params.pid);
+      await dataFile.writeProductsFile(newProducts)
+      return res.status(200).json({ msg: "Product successfully deleted" });
+    } else {
+      return res.status(404).json({ msg: "No product matches that ID" });
     }
   }
 }
