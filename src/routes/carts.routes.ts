@@ -1,4 +1,5 @@
-import { request, response, Router } from "express";
+import { Router } from "express";
+import { cartsController as cc} from "../controllers/carts.controller";
 
 class CartsRoutes {
   public router: Router;
@@ -8,7 +9,7 @@ class CartsRoutes {
   }
   routes() {
     this.router.get("/carts", (req, res) => {
-      res.send("<h1>HEllo from carts route!!</h1>");
+      res.send("<h1>Hi from carts route!!</h1>");
     });
   }
 }
