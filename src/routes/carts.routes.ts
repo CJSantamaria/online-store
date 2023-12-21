@@ -8,10 +8,9 @@ class CartsRoutes {
     this.routes();
   }
   routes() {
-    this.router.get("/", (req, res) => {
-      res.send("<h1>Hi from carts route!!</h1>");
-    });
     this.router.post("/", cc.createCart);
+    this.router.get("/:cid", cc.getCart);
+    this.router.post("/:cid/product/:pid", cc.addProduct)
   }
 }
 
