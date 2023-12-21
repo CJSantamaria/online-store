@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { productsController as pc } from "../controllers/products.controller";
 import { validateCreate } from "../validators/products.validator";
 
