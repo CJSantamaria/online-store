@@ -55,7 +55,7 @@ class ProductsController {
       const products = await dataFile.readProductsFile();
       products.push(product);
       dataFile.writeProductsFile(products);
-      return res.json({ msg: "Product successfully created" });
+      return res.status(201).json({ msg: "Product successfully created" });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
