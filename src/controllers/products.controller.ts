@@ -46,26 +46,10 @@ class ProductsController {
 
   public async createProduct(req: Request, res: Response): Promise<Response> {
     const id = uuidv4();
-    const status = true;
-    const {
-      title,
-      description,
-      code,
-      price,
-      stock,
-      category,
-      thumbnails,
-    } = req.body;
     const product: Product = {
       id,
-      title,
-      description,
-      code,
-      price,
-      status,
-      stock,
-      category,
-      thumbnails,
+      ...req.body,
+      status: true,
     };
     const products = await dataFile.readProductsFile();
     products.push(product);
