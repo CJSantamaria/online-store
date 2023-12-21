@@ -44,7 +44,7 @@ class ProductsController {
 
   // create a new product
 
-  public async createProduct(req: Request, res: Response): Promise<void> {
+  public async createProduct(req: Request, res: Response): Promise<Response> {
     const id = uuidv4();
     const status = true;
     const {
@@ -70,7 +70,7 @@ class ProductsController {
     const products = await dataFile.readProductsFile();
     products.push(product);
     dataFile.writeProductsFile(products);
-    res.json({ msg: "Product successfully created" });
+    return res.json({ msg: "Product successfully created" });
   }
 
   // update a product
