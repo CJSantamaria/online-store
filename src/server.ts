@@ -18,7 +18,7 @@ class Server {
   }
   routes() {
     this.app.use("/api/products", productsRoutes);
-    this.app.use("/api", cartsRoutes);
+    this.app.use("/api/carts", cartsRoutes);
   }
   start() {
     this.app.listen(this.app.get("port"), () => {
