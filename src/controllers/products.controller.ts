@@ -90,7 +90,6 @@ class ProductsController {
           products[index].price = req.body.price;
         }
         if (req.body.status !== undefined && req.body.status !== null) {
-          console.log("it was a change");
           products[index].status = req.body.status;
         }
         if (req.body.stock !== undefined && req.body.stock !== null) {
