@@ -48,6 +48,10 @@ class CartsController {
       if (cartIndex < 0)
         return res.status(404).json({ msg: "No cart matches that ID" });
 
+      const products = await dataFile.readProductsFile();
+      const product = products.find((p) => p.id === req.params.pid);
+      if (!product)
+        return res.status(404).json({ msg: "no product matches that ID" });
       const productIndex = carts[cartIndex].products.findIndex(
         (p) => p.pid === req.params.pid
       );
