@@ -3,10 +3,19 @@ import { check } from "express-validator";
 import { validateResult } from "../helpers/validate.helper";
 
 const validateCreate = [
+  check("id").not().exists(),
   check("title").exists().isLength({ min: 3 }),
   check("description").exists().isLength({ min: 10 }),
   check("code").exists().not().isEmpty(),
   check("category").exists().isLength({ min: 3 }),
+  check("status").custom((value, { req }) => {
+    if (value !== undefined && value !== true) {
+      throw new Error(
+        "status field is true by default, you can ommit it in your request body"
+      );
+    }
+    return true;
+  }),
   check("price")
     .exists()
     .isNumeric()
