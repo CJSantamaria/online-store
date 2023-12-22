@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import Product from "../types/product";
 import { dataFile } from "../helpers/data.helper";
+import { captureRejectionSymbol } from "events";
 
 class ProductsController {
   public constructor() {}
@@ -71,16 +72,39 @@ class ProductsController {
       if (index < 0) {
         return res.status(404).json({ msg: "No product matches that ID" });
       } else {
-        if (req.body.title) products[index].title = req.body.title;
-        if (req.body.description)
+        const previousState = JSON.stringify(products[index]);
+
+        if (req.body.title !== undefined && req.body.title !== null) {
+          products[index].title = req.body.title;
+        }
+        if (
+          req.body.description !== undefined &&
+          req.body.description !== null
+        ) {
           products[index].description = req.body.description;
-        if (req.body.code) products[index].code = req.body.code;
-        if (req.body.price) products[index].price = req.body.price;
-        if (req.body.status) products[index].status = req.body.status;
-        if (req.body.stock) products[index].stock = req.body.stock;
-        if (req.body.category) products[index].category = req.body.category;
-        if (req.body.thumbnails)
+        }
+        if (req.body.code !== undefined && req.body.code !== null) {
+          products[index].code = req.body.code;
+        }
+        if (req.body.price !== undefined && req.body.price != null) {
+          products[index].price = req.body.price;
+        }
+        if (req.body.status !== undefined && req.body.status !== null) {
+          console.log("it was a change");
+          products[index].status = req.body.status;
+        }
+        if (req.body.stock !== undefined && req.body.stock !== null) {
+          products[index].stock = req.body.stock;
+        }
+        if (req.body.category !== undefined && req.body.category !== null) {
+          products[index].category = req.body.category;
+        }
+        if (req.body.thumbnails !== undefined && req.body.thumbnails !== null) {
           products[index].thumbnails = req.body.thumbnails;
+        }
+
+        if (JSON.stringify(products[index]) === previousState)
+          return res.status(304).json({ msg: "Product was not modified" });
 
         dataFile.writeProductsFile(products);
         return res.status(200).json({ msg: "Product successfully updated" });
