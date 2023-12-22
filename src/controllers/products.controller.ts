@@ -45,10 +45,9 @@ class ProductsController {
   // create a new product
 
   public async createProduct(req: Request, res: Response): Promise<Response> {
-    const id = uuidv4();
     const product: Product = {
+      id: uuidv4(),
       ...req.body,
-      id,
       status: true,
     };
     try {
@@ -105,7 +104,7 @@ class ProductsController {
         return res.status(404).json({ msg: "No product matches that ID" });
       }
     } catch (error) {
-      return res.status(500).json({msg: error.message})
+      return res.status(500).json({ msg: error.message });
     }
   }
 }
