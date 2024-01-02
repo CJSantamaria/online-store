@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import Cart from "../types/cart";
 import { dataFile } from "../helpers/data.helper";
-import { json } from "stream/consumers";
 
 class CartsController {
   // create cart
