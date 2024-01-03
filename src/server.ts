@@ -12,8 +12,8 @@ class Server {
   }
 
   config() {
-      this.app.set("port", process.env.PORT || 8080);
-      this.app.use(express.json())
+    this.app.set("port", process.env.PORT || 8080);
+    this.app.use(express.json());
     this.app.use(morgan("dev"));
   }
   routes() {
@@ -22,7 +22,7 @@ class Server {
   }
   start() {
     this.app.listen(this.app.get("port"), () => {
-      console.log(`Server listening on port ${this.app.get("port")}..`);
+      console.log(`Server listening on port ${this.app.get("port")}...`);
     });
   }
 }
