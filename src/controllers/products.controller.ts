@@ -13,9 +13,22 @@ class ProductsController {
       ? <number>(<unknown>req.query.limit)
       : 10;
     const startIndex: number = (page - 1) * limit;
-
+    const filter = {
+      category: {},
+      status: {},
+    };
+    const categoryRegex = new RegExp(`^${req.query.category}$`, 'i'); // case insensitive comparison
+    filter.category = req.query.category
+      ? { $regex: categoryRegex }
+      : { $exists: true };
+    filter.status = req.query.status
+      ? <string>req.query.status
+      : { $exists: true };
     try {
-      const products = await productSchema.find().skip(startIndex).limit(limit);
+      const products = await productSchema
+        .find(filter)
+        .skip(startIndex)
+        .limit(limit);
       return res.status(200).send(products);
     } catch (error) {
       return res.status(500).json({ msg: error.message });
@@ -70,7 +83,7 @@ class ProductsController {
 
   public async deleteProduct(req: Request, res: Response): Promise<Response> {
     if (!mongoose.Types.ObjectId.isValid(req.params.pid))
-      return  res.status(400).json({ msg: "Bad request: invalid product ID" });
+      return res.status(400).json({ msg: "Bad request: invalid product ID" });
     try {
       const product = await productSchema.findById(req.params.pid);
       if (product) {
