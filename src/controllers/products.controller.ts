@@ -15,18 +15,17 @@ class ProductsController {
       : 10;
     const startIndex: number = (page - 1) * limit;
 
-    const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // case insensitive comparison
+    const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // category case insensitive comparison
     const categoryFilter = req.query.category
       ? { $regex: categoryRegex }
       : { $exists: true };
     const stockFilter = req.query.stock
       ? <string>req.query.stock
-      : { $exists: true };
+      : 0;
     const statusFilter = req.query.status
       ? <string>req.query.status
       : { $exists: true };
 
-      console.log(`Category: ${categoryFilter}, Status ${statusFilter}`)
     try {
       const products = await productSchema
         .find({
