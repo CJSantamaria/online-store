@@ -8,25 +8,32 @@ class ProductsController {
   // get a specific page of the list of products
 
   public async getProducts(req: Request, res: Response): Promise<Response> {
-    const page: number = req.query.page ? <number>(<unknown>req.query.page) : 1;
+
+    const page: number = req.query.page ? <number>(<unknown>req.query.page) : 1; // pagination
     const limit: number = req.query.limit
       ? <number>(<unknown>req.query.limit)
       : 10;
     const startIndex: number = (page - 1) * limit;
-    const filter = {
-      category: {},
-      status: {},
-    };
-    const categoryRegex = new RegExp(`^${req.query.category}$`, 'i'); // case insensitive comparison
-    filter.category = req.query.category
+
+    const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // case insensitive comparison
+    const categoryFilter = req.query.category
       ? { $regex: categoryRegex }
       : { $exists: true };
-    filter.status = req.query.status
+    const stockFilter = req.query.stock
+      ? <string>req.query.stock
+      : { $exists: true };
+    const statusFilter = req.query.status
       ? <string>req.query.status
       : { $exists: true };
+
+      console.log(`Category: ${categoryFilter}, Status ${statusFilter}`)
     try {
       const products = await productSchema
-        .find(filter)
+        .find({
+          "category": categoryFilter,
+          "status" : statusFilter,
+          "stock": {$gte : stockFilter}
+        })
         .skip(startIndex)
         .limit(limit);
       return res.status(200).send(products);
