@@ -8,33 +8,38 @@ class ProductsController {
   // get a specific page of the list of products
 
   public async getProducts(req: Request, res: Response): Promise<Response> {
-
     const page: number = req.query.page ? <number>(<unknown>req.query.page) : 1; // pagination
     const limit: number = req.query.limit
       ? <number>(<unknown>req.query.limit)
       : 10;
     const startIndex: number = (page - 1) * limit;
 
+    // query results filtering
+
     const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // category case insensitive comparison
     const categoryFilter = req.query.category
       ? { $regex: categoryRegex }
       : { $exists: true };
-    const stockFilter = req.query.stock
-      ? <string>req.query.stock
-      : 0;
+    const stockFilter = req.query.stock ? <string>req.query.stock : 0;
     const statusFilter = req.query.status
       ? <string>req.query.status
       : { $exists: true };
 
+    // query results sorting
+
+    type SortOption = "asc" | "desc" | null;
+    const sortOrder: SortOption = req.query.sort ? <SortOption>req.query.sort : null
+    
     try {
       const products = await productSchema
         .find({
-          "category": categoryFilter,
-          "status" : statusFilter,
-          "stock": {$gte : stockFilter}
+          category: categoryFilter,
+          status: statusFilter,
+          stock: { $gte: stockFilter },
         })
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .sort(sortOrder === null ? {} : { "price": sortOrder });
       return res.status(200).send(products);
     } catch (error) {
       return res.status(500).json({ msg: error.message });
