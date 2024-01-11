@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import productSchema from "../models/product.model";
 import mongoose from "mongoose";
+import getLink from "../helpers/string.helper";
 
 class ProductsController {
   public constructor() {}
@@ -8,7 +9,7 @@ class ProductsController {
   // get a specific page of the list of products
 
   public async getProducts(req: Request, res: Response): Promise<Response> {
-    const page: number = req.query.page ? <number>(<unknown>req.query.page) : 1; // pagination
+    const page: number = req.query.page ? Number(req.query.page) : 1; // pagination
     const limit: number = req.query.limit
       ? <number>(<unknown>req.query.limit)
       : 10;
@@ -17,7 +18,7 @@ class ProductsController {
     // query results filtering
 
     const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // category case insensitive comparison
-    const anyRegex = new RegExp('^.*$');
+    const anyRegex = new RegExp("^.*$");
     const categoryFilter = req.query.category
       ? { $regex: categoryRegex }
       : { $regex: anyRegex };
@@ -29,19 +30,45 @@ class ProductsController {
     // query results sorting
 
     type SortOption = "asc" | "desc" | null;
-    const sortOrder: SortOption = req.query.sort ? <SortOption>req.query.sort : null
-    
+    const sortOrder: SortOption = req.query.sort
+      ? <SortOption>req.query.sort
+      : null;
+
     try {
-      const products = await productSchema
-        .find({
+      const [products, total] = await Promise.all([
+        productSchema
+          .find({
+            category: categoryFilter,
+            status: statusFilter,
+            stock: { $gte: stockFilter },
+          })
+          .skip(startIndex)
+          .limit(limit)
+          .sort(sortOrder === null ? {} : { price: sortOrder }),
+        productSchema.countDocuments({
           category: categoryFilter,
           status: statusFilter,
           stock: { $gte: stockFilter },
-        })
-        .skip(startIndex)
-        .limit(limit)
-        .sort(sortOrder === null ? {} : { "price": sortOrder });
-      return res.status(200).send(products);
+        }),
+      ]);
+      const totalPages = Math.ceil(total / limit);
+      const prevPage = page > 1 ? page <= totalPages ? page - 1 : totalPages : null;
+      const nextPage = page < totalPages ? page + 1 : null;
+      const hasPrevPage = prevPage !== null;
+      const hasNextPage = nextPage !== null;
+      const prevLink = hasPrevPage ? getLink(req.url, page, totalPages, "prev") : "";
+      const nextLink = hasNextPage ? getLink(req.url, page, totalPages, "next") : "";
+      return res.status(200).json({
+        payload: products,
+        totalPages,
+        prevPage,
+        nextPage,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink,
+        nextLink,
+      });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
