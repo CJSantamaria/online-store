@@ -17,10 +17,11 @@ class ProductsController {
     // query results filtering
 
     const categoryRegex = new RegExp(`^${req.query.category}$`, "i"); // category case insensitive comparison
+    const anyRegex = new RegExp('^.*$');
     const categoryFilter = req.query.category
       ? { $regex: categoryRegex }
-      : { $exists: true };
-    const stockFilter = req.query.stock ? <string>req.query.stock : 0;
+      : { $regex: anyRegex };
+    const stockFilter = req.query.stock ? <string>req.query.stock : "0";
     const statusFilter = req.query.status
       ? <string>req.query.status
       : { $exists: true };
