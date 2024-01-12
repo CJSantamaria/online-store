@@ -61,9 +61,9 @@ class ProductsController {
       return res.status(200).json({
         payload: products,
         totalPages,
+        page,
         prevPage,
         nextPage,
-        page,
         hasPrevPage,
         hasNextPage,
         prevLink,
