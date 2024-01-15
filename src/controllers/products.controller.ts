@@ -78,7 +78,7 @@ class ProductsController {
 
   public async getProduct(req: Request, res: Response): Promise<Response> {
     try {
-      const product = await productSchema.findOne({ _id: req.params.pid });
+      const product = await productSchema.findById(req.params.pid );
       if (product) {
         return res.status(200).send(product);
       } else {
