@@ -1,24 +1,45 @@
-import { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
-import Cart from "../types/cart";
-import { dataFile } from "../helpers/data.helper";
+import e, { Request, Response } from "express";
+import Cart from "../models/cart.model";
+import Product from "../models/product.model";
+import mongoose from "mongoose";
 
 class CartsController {
   // create cart
 
   public async createCart(req: Request, res: Response): Promise<Response> {
-    const id = uuidv4();
-    const cart: Cart = {
-      id,
-      ...req.body,
-    };
+    const receivedProducts = req.body.products;
+
+    type Products = {  
+      productId: mongoose.Schema.Types.ObjectId;
+      quantity: number;
+    }[];
+
+    const verifiedProducts: Products = [];
     try {
-      const carts = await dataFile.readCartsFile();
-      carts.push(cart);
-      await dataFile.writeCartsFile(carts);
-      return res.send({ msg: "cart succcessfully created" });
+      await Promise.all(
+        receivedProducts.map(async (p: any) => { 
+          const product = await Product.findById(p.pid);
+          if (product) {  
+            verifiedProducts.push({
+              productId: p.pid,
+              quantity: p.quantity,
+            });
+          } else {
+            console.error(`product ${p.pid} does not exist`);
+          }
+        })
+      );
+      if (verifiedProducts.length > 0) {
+        const cartObject = {
+          products: verifiedProducts,
+        };
+        const cart = Cart.create(cartObject);
+      } else {
+        return res.status(404).json({ msg: "No products match those IDs" });
+      }
+      return res.status(201).json({ msg: "cart succcessfully created" });
     } catch (error) {
-      return res.json({ error: error.message });
+      return res.json({ msg: error.message });
     }
   }
 
@@ -26,13 +47,12 @@ class CartsController {
 
   public async getCart(req: Request, res: Response): Promise<Response> {
     try {
-      const carts = await dataFile.readCartsFile();
-      const cart = carts.find((c) => c.id === req.params.cid);
+      const cart = await Cart.findOne({ _id: req.params.cid });
       if (cart) {
         return res.status(200).send(cart);
-      } else {
-        return res.status(404).json({ msg: "No cart matches that ID" });
       }
+
+      return res.status(404).json({ msg: "No cart matches that ID" });
     } catch (error) {
       return res.json({ msg: error.message });
     }
@@ -41,34 +61,31 @@ class CartsController {
   // add product to the cart
 
   public async addProduct(req: Request, res: Response): Promise<Response> {
+    const { cid, pid } = req.params;
     try {
-      const carts = await dataFile.readCartsFile();
-      const cartIndex = carts.findIndex((c) => c.id === req.params.cid);
-      if (cartIndex < 0)
+      const cart = await Cart.findById(cid);
+      if (!cart) {
         return res.status(404).json({ msg: "No cart matches that ID" });
-
-      const products = await dataFile.readProductsFile();
-      const product = products.find((p) => p.id === req.params.pid);
-      if (!product)
-        return res.status(404).json({ msg: "no product matches that ID" });
-      const productIndex = carts[cartIndex].products.findIndex(
-        (p) => p.pid === req.params.pid
-      );
-      if (productIndex < 0) {
-        const product = {
-          pid: req.params.pid,
-          quantity: 1,
-        };
-        carts[cartIndex].products.push(product);
-      } else {
-        carts[cartIndex].products[productIndex].quantity += 1;
       }
-      await dataFile.writeCartsFile(carts);
+      const product = await Product.findById(pid);
+      if (!product) {
+        return res.status(404).json({ msg: "No product matches that ID" });
+      }
+      const existingProduct = cart.products.find(
+        (p: any) => String(p.productId) === pid
+      );
+      if (existingProduct) {
+        existingProduct.quantity = Number(existingProduct.quantity) + 1;
+      } else {
+        const productId = new mongoose.Schema.Types.ObjectId(pid);
+        cart.products.push({ productId, quantity: 1 });
+      }
+      await cart.save();
       return res
         .status(201)
         .json({ msg: "Product successfully added to the cart" });
     } catch (error) {
-      return res.status(500).json({ msg: error.message });
+      return res.json({ msg: error.message });
     }
   }
 }
