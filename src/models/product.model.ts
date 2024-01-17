@@ -1,6 +1,19 @@
-import mongoose, { model, Document } from "mongoose";
+import mongoose, { model } from "mongoose";
+import Product from "../types/product";
 
-const productSchema = new mongoose.Schema({
+// interface Product {
+//   id: mongoose.Schema.Types.ObjectId;
+//   title: string;
+//   description: string;
+//   code: string;
+//   price: number;
+//   status: boolean;
+//   stock: number;
+//   category: string;
+//   thumbnails: string[];
+// }
+
+const productSchema = new mongoose.Schema<Product>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   code: { type: String, required: true },
@@ -8,8 +21,7 @@ const productSchema = new mongoose.Schema({
   status: { type: Boolean, required: true },
   stock: { type: Number, required: true },
   category: { type: String, required: true },
-  thumbnails: { type: [String] }
+  thumbnails: { type: [String] },
 });
 
-export default model('Product', productSchema)
-//module.exports = model('Product', productSchema)
+export default model("Product", productSchema);
