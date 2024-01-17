@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { nextTick } from "process";
 
 const trimStringValues = (req: Request, res: Response, next: Function) => {
   if (req.body && typeof req.body === "object") {
