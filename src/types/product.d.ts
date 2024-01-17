@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
+
 export default interface Product {
-    id: string;
+    id: mongoose.Schema.Types.ObjectId;
     title: string;
     description: string;
     code: string;
