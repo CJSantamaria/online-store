@@ -1,9 +1,9 @@
+import mongoose from "mongoose";
+
 export default interface Cart {
-  id: string;
-  products: [
-    {
-      pid: string,
-      quantity: number;
-    }
-  ];
+  id: mongoose.Schema.Types.ObjectId;
+  products: {
+    pid: mongoose.Schema.Types.ObjectId;
+    quantity: number;
+  }[];
 }
