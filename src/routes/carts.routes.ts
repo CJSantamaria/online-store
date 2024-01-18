@@ -8,9 +8,9 @@ class CartsRoutes {
     this.routes();
   }
   routes() {
-    this.router.post("/", cc.createCart);
-    this.router.get("/:cid", cc.getCart);
-    this.router.post("/:cid/product/:pid", cc.addProduct)
+    this.router.post("/", cc.createCart); // create cart
+    this.router.get("/:cid", cc.getCart); // get cart by id
+    this.router.post("/:cid/product/:pid", cc.addProduct); // add product to cart
   }
 }
 
