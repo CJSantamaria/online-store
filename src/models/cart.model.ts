@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface Product {
-  productId: mongoose.Schema.Types.ObjectId;
+  productId: mongoose.Types.ObjectId;
   quantity: number;
 }
 
