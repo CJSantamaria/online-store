@@ -3,29 +3,31 @@ import Cart from "../models/cart.model";
 import Product from "../models/product.model";
 import mongoose from "mongoose";
 
+type Product = {
+  productId: mongoose.Schema.Types.ObjectId;
+  quantity: number;
+};
+
+type Products = Product[];
+
 class CartsController {
   // create cart
 
   public async createCart(req: Request, res: Response): Promise<Response> {
     const receivedProducts = req.body.products;
 
-    type Products = {  
-      productId: mongoose.Schema.Types.ObjectId;
-      quantity: number;
-    }[];
-
     const verifiedProducts: Products = [];
     try {
       await Promise.all(
-        receivedProducts.map(async (p: any) => { 
-          const product = await Product.findById(p.pid);
-          if (product) {  
+        receivedProducts.map(async (p: Product) => {
+          const product = await Product.findById(p.productId);
+          if (product) {
             verifiedProducts.push({
-              productId: p.pid,
+              productId: p.productId,
               quantity: p.quantity,
             });
           } else {
-            console.error(`product ${p.pid} does not exist`);
+            console.error(`product ${p.productId} does not exist`);
           }
         })
       );
@@ -71,11 +73,11 @@ class CartsController {
       if (!product) {
         return res.status(404).json({ msg: "No product matches that ID" });
       }
-      const existingProduct = cart.products.find(
-        (p: any) => String(p.productId) === pid
+      const existingProduct: Product | undefined = cart.products.find(
+        (p: Product) => String(p.productId) === pid
       );
       if (existingProduct) {
-        existingProduct.quantity = Number(existingProduct.quantity) + 1;
+        existingProduct.quantity = existingProduct.quantity + 1;
       } else {
         const productId = new mongoose.Schema.Types.ObjectId(pid);
         cart.products.push({ productId, quantity: 1 });
