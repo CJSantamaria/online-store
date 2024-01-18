@@ -59,6 +59,7 @@ class ProductsController {
       const prevLink = hasPrevPage ? getLink(req.url, page, totalPages, "prev") : "";
       const nextLink = hasNextPage ? getLink(req.url, page, totalPages, "next") : "";
       return res.status(200).json({
+        status: "success",
         payload: products,
         totalPages,
         page,
@@ -70,7 +71,10 @@ class ProductsController {
         nextLink,
       });
     } catch (error) {
-      return res.status(500).json({ msg: error.message });
+      return res.status(500).json({ 
+        status: "error",
+        msg: error.message,
+      });
     }
   }
 
