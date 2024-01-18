@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Typescript",
+            "program": "${workspaceFolder}/build/server.js",
+            // "runtimeArgs": ["npm: start"],
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true,
+            "runtimeExecutable": "node",
+        }
+    ]
+}
