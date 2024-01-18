@@ -12,6 +12,7 @@ class CartsRoutes {
     this.router.get("/:cid", cc.getCart); // get cart by id
     this.router.post("/:cid/product/:pid", cc.addProduct); // add product to cart
     this.router.delete("/:cid/product/:pid", cc.removeProduct); // remove product from cart
+    this.router.put("/:cid", cc.updateCart); // update whole cart
   }
 }
 
