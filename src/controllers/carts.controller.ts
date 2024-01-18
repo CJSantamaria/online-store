@@ -2,6 +2,7 @@ import e, { Request, Response } from "express";
 import Cart from "../models/cart.model";
 import Product from "../models/product.model";
 import mongoose from "mongoose";
+import { promiseHooks } from "v8";
 
 type cartProduct = {
   productId: mongoose.Types.ObjectId;
@@ -73,15 +74,17 @@ class CartsController {
       if (!productInCatalog) {
         return res.status(404).json({ msg: "No product matches that ID" });
       }
-      const productIncart = cart.products.find((p) => String(p.productId) === pid);
-      
+      const productIncart = cart.products.find(
+        (p) => String(p.productId) === pid
+      );
+
       if (productIncart) {
         productIncart.quantity += 1;
       } else {
         const newProduct: cartProduct = {
-          productId : new mongoose.Types.ObjectId(pid),
-          quantity : 1
-        }
+          productId: new mongoose.Types.ObjectId(pid),
+          quantity: 1,
+        };
         cart.products.push(newProduct);
       }
       await cart.save();
@@ -120,6 +123,39 @@ class CartsController {
       return res.status(200).json({ msg: "Product successfully removed" });
     } catch (error) {
       return res.json({ msg: error.message });
+    }
+  }
+
+  // update the whole cart
+
+  public async updateCart(req: Request, res: Response): Promise<Response> {
+    const receivedProducts = req.body.products;
+    const verifiedProducts: cartProducts = [];
+    try {
+      await Promise.all(
+        receivedProducts.map(async (p: cartProduct) => {
+          const productInCatalog = await Product.findById(p.productId);
+          if (productInCatalog) {
+            verifiedProducts.push({
+              productId: p.productId,
+              quantity: p.quantity,
+            });
+            console.log(`Product ${p.productId} added to the cart`);
+          }
+        })
+      );
+      if (verifiedProducts.length > 0) {
+        await Cart.findByIdAndUpdate(req.params.cid, {
+          products: verifiedProducts,
+        });
+      } else {
+        return res.status(404).json({ msg: "No products match those IDs" });
+      }
+      return res
+        .status(200)
+        .json({ msg: "Cart contents successfully updated" });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
     }
   }
 }
