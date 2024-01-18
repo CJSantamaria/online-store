@@ -3,12 +3,12 @@ import Cart from "../models/cart.model";
 import Product from "../models/product.model";
 import mongoose from "mongoose";
 
-type Product = {
-  productId: mongoose.Schema.Types.ObjectId;
+type cartProduct = {
+  productId: mongoose.Types.ObjectId;
   quantity: number;
 };
 
-type Products = Product[];
+type cartProducts = cartProduct[];
 
 class CartsController {
   // create cart
@@ -16,10 +16,10 @@ class CartsController {
   public async createCart(req: Request, res: Response): Promise<Response> {
     const receivedProducts = req.body.products;
 
-    const verifiedProducts: Products = [];
+    const verifiedProducts: cartProducts = [];
     try {
       await Promise.all(
-        receivedProducts.map(async (p: Product) => {
+        receivedProducts.map(async (p: cartProduct) => {
           const product = await Product.findById(p.productId);
           if (product) {
             verifiedProducts.push({
@@ -35,7 +35,7 @@ class CartsController {
         const cartObject = {
           products: verifiedProducts,
         };
-        const cart = Cart.create(cartObject);
+        Cart.create(cartObject);
       } else {
         return res.status(404).json({ msg: "No products match those IDs" });
       }
@@ -69,23 +69,55 @@ class CartsController {
       if (!cart) {
         return res.status(404).json({ msg: "No cart matches that ID" });
       }
-      const product = await Product.findById(pid);
-      if (!product) {
+      const productInCatalog = await Product.findById(pid);
+      if (!productInCatalog) {
         return res.status(404).json({ msg: "No product matches that ID" });
       }
-      const existingProduct: Product | undefined = cart.products.find(
-        (p: Product) => String(p.productId) === pid
-      );
-      if (existingProduct) {
-        existingProduct.quantity = existingProduct.quantity + 1;
+      const productIncart = cart.products.find((p) => String(p.productId) === pid);
+      
+      if (productIncart) {
+        productIncart.quantity += 1;
       } else {
-        const productId = new mongoose.Schema.Types.ObjectId(pid);
-        cart.products.push({ productId, quantity: 1 });
+        const newProduct: cartProduct = {
+          productId : new mongoose.Types.ObjectId(pid),
+          quantity : 1
+        }
+        cart.products.push(newProduct);
       }
       await cart.save();
       return res
         .status(201)
         .json({ msg: "Product successfully added to the cart" });
+    } catch (error) {
+      return res.json({ msg: error.message });
+    }
+  }
+
+  // remove product from the cart
+
+  public async removeProduct(req: Request, res: Response): Promise<Response> {
+    const { cid, pid } = req.params;
+    try {
+      const product = await Product.findById(pid);
+      if (!product) {
+        return res.status(404).json({ msg: "No product matches that ID" });
+      }
+      const cart = await Cart.findById(cid);
+      if (!cart) {
+        return res.status(404).json({ msg: "No cart matches that ID" });
+      }
+      const cartInProduct = cart.products.find(
+        (p) => String(p.productId) === pid
+      );
+      if (!cartInProduct) {
+        return res.status(404).json({ msg: "Product not found in the cart" });
+      }
+      await Cart.findByIdAndUpdate(
+        cid,
+        { $pull: { products: { productId: pid } } },
+        { new: true }
+      );
+      return res.status(200).json({ msg: "Product successfully removed" });
     } catch (error) {
       return res.json({ msg: error.message });
     }
