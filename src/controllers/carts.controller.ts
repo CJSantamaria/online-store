@@ -186,9 +186,9 @@ class CartsController {
     }
   }
 
-  // delete cart
+  // remove all products from the cart
 
-  public async deleteCart(req: Request, res: Response): Promise<Response> {
+  public async removeProductsFromCart(req: Request, res: Response): Promise<Response> {
     try {
       const cart = await Cart.findById(req.params.cid);
       if (!cart) {
