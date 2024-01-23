@@ -15,8 +15,7 @@ class CartsController {
   // create cart
 
   public async createCart(req: Request, res: Response): Promise<Response> {
-    const receivedProducts = req.body.products;
-
+    const receivedProducts: cartProducts = req.body.products;
     const verifiedProducts: cartProducts = [];
     try {
       await Promise.all(
@@ -27,8 +26,6 @@ class CartsController {
               productId: p.productId,
               quantity: p.quantity,
             });
-          } else {
-            console.error(`product ${p.productId} does not exist`);
           }
         })
       );
