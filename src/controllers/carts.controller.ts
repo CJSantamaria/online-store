@@ -51,11 +51,14 @@ class CartsController {
   public async getCart(req: Request, res: Response): Promise<Response> {
     try {
       const cart = await Cart.findOne({ _id: req.params.cid });
-      if (cart) {
-        return res.status(200).send(cart);
+      if (!cart) {
+        return res.status(404).json({ msg: "No cart matches that ID" });
       }
-
-      return res.status(404).json({ msg: "No cart matches that ID" });
+      const populatedCart = await cart.populate({
+        path: "products.productId",
+        select: ["title", "description", "price", "category"],
+      });
+      return res.status(200).send(populatedCart);
     } catch (error) {
       return res.json({ msg: error.message });
     }
@@ -188,14 +191,19 @@ class CartsController {
 
   // remove all products from the cart
 
-  public async removeProductsFromCart(req: Request, res: Response): Promise<Response> {
+  public async removeProductsFromCart(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     try {
       const cart = await Cart.findById(req.params.cid);
       if (!cart) {
         return res.status(404).json({ msg: "No cart matches that Id" });
       }
 
-      await Cart.findByIdAndUpdate(req.params.cid, {$pull: {products: { $exists: true}}})
+      await Cart.findByIdAndUpdate(req.params.cid, {
+        $pull: { products: { $exists: true } },
+      });
 
       return res
         .status(200)
