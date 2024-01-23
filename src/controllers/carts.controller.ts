@@ -161,11 +161,12 @@ class CartsController {
 
   // update product quantity
 
-  public async updateProductQuantity(req: Request, res: Response): Promise<Response> {
-    console.log("updateProductQuantity");
+  public async updateProductQuantity(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    console.log(`cartId: ${cid}, productId: ${pid}, quantity: ${quantity}`);
     try {
       const cart = await Cart.findById(cid);
       if (!cart) {
@@ -182,6 +183,25 @@ class CartsController {
       return res.status(200).json({ msg: "Product quantity updated" });
     } catch (error) {
       return res.json({ msg: error.message });
+    }
+  }
+
+  // delete cart
+
+  public async deleteCart(req: Request, res: Response): Promise<Response> {
+    try {
+      const cart = await Cart.findById(req.params.cid);
+      if (!cart) {
+        return res.status(404).json({ msg: "No cart matches that Id" });
+      }
+
+      await Cart.findByIdAndUpdate(req.params.cid, {$pull: {products: { $exists: true}}})
+
+      return res
+        .status(200)
+        .json({ msg: "Cart contents successfully removed" });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
     }
   }
 }
