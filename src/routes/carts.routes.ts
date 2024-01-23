@@ -13,6 +13,7 @@ class CartsRoutes {
     this.router.post("/:cid/product/:pid", cc.addProduct); // add product to cart
     this.router.delete("/:cid/product/:pid", cc.removeProduct); // remove product from cart
     this.router.put("/:cid", cc.updateCart); // update whole cart
+    this.router.patch("/:cid/products/:pid", cc.updateProductQuantity); // update product quantity in cart
   }
 }
 
